@@ -92,4 +92,24 @@ public class Vehicle
     {
         isSold = sold;
     }
+
+    public String displayVehicleInfo(){
+
+        return String.format(
+                "Vin: %s\n" +
+                "Make (Model): %s (%s)\n" +
+                "Color: %s\n" +
+                "Mileage: %d\n" +
+                "In Stock: %b\n" +
+                "Year: %d\n"+
+                "Price[$]: %.2f\n",
+                getVin(),
+                getMake(),
+                getModel(),
+                getColor(),
+                getMiles(),
+                !(isSold()),
+                getYear(),
+                getPrice());
+    }
 }

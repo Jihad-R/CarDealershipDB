@@ -93,11 +93,72 @@ public class MySqlVehicleDao implements VehicleDao{
 
     @Override
     public List<Vehicle> getByYearRange(int min, int max) {
-        return null;
-    }
+
+        String sql = """
+                Select * from vehicles 
+                where year Between ? and ?;
+                     """;
+
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setInt(1,min);
+            preparedStatement.setInt(2,max);
+
+            ResultSet rows = preparedStatement.executeQuery();
+
+            while (rows.next())
+            {
+                Vehicle vehicle = createVehicleFromResultSet(rows);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
+        return null;    }
 
     @Override
     public List<Vehicle> getByColor(String color) {
+
+        String sql = """
+                Select * from vehicles 
+                where color = ?;
+                     """;
+
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1,color);
+            ResultSet rows = preparedStatement.executeQuery();
+
+            while (rows.next())
+            {
+                Vehicle vehicle = createVehicleFromResultSet(rows);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
         return null;
     }
 

@@ -20,6 +20,49 @@ public class CarDealershipApplication
     {
         displayVehiclesInPriceRange();
         displayVehiclesByMakeModel();
+        displayVehiclesInYearRange();
+        displayVehiclesByColor();
+    }
+
+    private void displayVehiclesByColor() {
+        System.out.print("Enter the Color: ");
+        String color = scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        System.out.println();
+        System.out.println("Results");
+        System.out.println("-".repeat(35));
+
+        var vehicles = vehicleDao.getByColor(color);
+
+        for (var vehicle: vehicles)
+        {
+            System.out.print(vehicle.displayVehicleInfo());
+            System.out.println("-".repeat(35));
+        }
+    }
+
+    private void displayVehiclesInYearRange() {
+        System.out.print("Enter the start year: ");
+        int min = scanner.nextInt();
+
+        System.out.print("Enter the end year: ");
+        int max = scanner.nextInt();
+        scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        System.out.println();
+        System.out.println("Results");
+        System.out.println("-".repeat(35));
+        var vehicles = vehicleDao.getByYearRange(min,max);
+
+        for (var vehicle: vehicles)
+        {
+            System.out.print(vehicle.displayVehicleInfo());
+            System.out.println("-".repeat(35));
+        }
     }
 
     private void displayVehiclesByMakeModel() {
@@ -39,12 +82,7 @@ public class CarDealershipApplication
 
         for (var vehicle: vehicles)
         {
-            System.out.println("Vin: "+vehicle.getVin());
-            System.out.println("Make (Model): "+vehicle.getMake()+" ("+vehicle.getModel()+")");
-            System.out.println("Color: "+vehicle.getColor());
-            System.out.println("Mileage: "+vehicle.getMiles());
-            System.out.println("In Stock: "+!(vehicle.isSold()));
-            System.out.println("Price: "+vehicle.getPrice());
+            System.out.print(vehicle.displayVehicleInfo());
             System.out.println("-".repeat(35));
         }
 
@@ -69,12 +107,7 @@ public class CarDealershipApplication
 
         for (var vehicle: vehicles)
         {
-            System.out.println("Vin: "+vehicle.getVin());
-            System.out.println("Make (Model): "+vehicle.getMake()+" ("+vehicle.getModel()+")");
-            System.out.println("Color: "+vehicle.getColor());
-            System.out.println("Mileage: "+vehicle.getMiles());
-            System.out.println("In Stock: "+!(vehicle.isSold()));
-            System.out.println("Price: "+vehicle.getPrice());
+            System.out.print(vehicle.displayVehicleInfo());
             System.out.println("-".repeat(35));
         }
 
