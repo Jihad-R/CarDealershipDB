@@ -164,11 +164,74 @@ public class MySqlVehicleDao implements VehicleDao{
 
     @Override
     public List<Vehicle> getByMileageRange(int min, int max) {
+
+        String sql = """
+                Select * from vehicles 
+                where miles Between ? and ?;
+                     """;
+
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setInt(1,min);
+            preparedStatement.setInt(2,max);
+
+            ResultSet rows = preparedStatement.executeQuery();
+
+            while (rows.next())
+            {
+                Vehicle vehicle = createVehicleFromResultSet(rows);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
         return null;
     }
 
     @Override
     public List<Vehicle> getByType(String type) {
+
+        String sql = """
+                Select * from vehicles 
+                where type = ?;
+                     """;
+
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1,type);
+
+            ResultSet rows = preparedStatement.executeQuery();
+
+            while (rows.next())
+            {
+                Vehicle vehicle = createVehicleFromResultSet(rows);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
         return null;
     }
 

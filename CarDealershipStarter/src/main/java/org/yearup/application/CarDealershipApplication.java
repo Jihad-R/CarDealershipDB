@@ -2,9 +2,11 @@ package org.yearup.application;
 
 import org.yearup.data.MySqlVehicleDao;
 import org.yearup.data.VehicleDao;
+import org.yearup.models.Vehicle;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class CarDealershipApplication
@@ -18,10 +20,48 @@ public class CarDealershipApplication
 
     public void run()
     {
-        displayVehiclesInPriceRange();
-        displayVehiclesByMakeModel();
-        displayVehiclesInYearRange();
-        displayVehiclesByColor();
+        
+    }
+
+    private void displayVehicles(List<Vehicle> vehicles) {
+        System.out.println();
+        System.out.println("Results");
+        System.out.println("-".repeat(35));
+
+        for (var vehicle : vehicles) {
+            System.out.print(vehicle.displayVehicleInfo());
+            System.out.println("-".repeat(35));
+        }
+    }
+
+    private void displayVehiclesByType()
+    {
+        System.out.print("Enter the Color: ");
+        String type = scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        var vehicles = vehicleDao.getByType(type);
+
+        displayVehicles(vehicles);
+
+    }
+
+    private void displayVehiclesInMilesRange()
+    {
+        System.out.print("Enter the lowest mileage: ");
+        int min = scanner.nextInt();
+
+        System.out.print("Enter the largest mileage: ");
+        int max = scanner.nextInt();
+        scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        var vehicles = vehicleDao.getByYearRange(min,max);
+
+        displayVehicles(vehicles);
+
     }
 
     private void displayVehiclesByColor() {
@@ -30,17 +70,9 @@ public class CarDealershipApplication
 
         VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
 
-        System.out.println();
-        System.out.println("Results");
-        System.out.println("-".repeat(35));
-
         var vehicles = vehicleDao.getByColor(color);
 
-        for (var vehicle: vehicles)
-        {
-            System.out.print(vehicle.displayVehicleInfo());
-            System.out.println("-".repeat(35));
-        }
+        displayVehicles(vehicles);
     }
 
     private void displayVehiclesInYearRange() {
@@ -53,16 +85,9 @@ public class CarDealershipApplication
 
         VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
 
-        System.out.println();
-        System.out.println("Results");
-        System.out.println("-".repeat(35));
         var vehicles = vehicleDao.getByYearRange(min,max);
 
-        for (var vehicle: vehicles)
-        {
-            System.out.print(vehicle.displayVehicleInfo());
-            System.out.println("-".repeat(35));
-        }
+        displayVehicles(vehicles);
     }
 
     private void displayVehiclesByMakeModel() {
@@ -74,19 +99,9 @@ public class CarDealershipApplication
 
         VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
 
-        System.out.println();
-        System.out.println("Results");
-        System.out.println("-".repeat(35));
-
         var vehicles = vehicleDao.getByMakeModel(make,model);
 
-        for (var vehicle: vehicles)
-        {
-            System.out.print(vehicle.displayVehicleInfo());
-            System.out.println("-".repeat(35));
-        }
-
-
+        displayVehicles(vehicles);
     }
 
     private void displayVehiclesInPriceRange()
@@ -100,16 +115,9 @@ public class CarDealershipApplication
 
         VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
 
-        System.out.println();
-        System.out.println("Results");
-        System.out.println("-".repeat(35));
         var vehicles = vehicleDao.getByPriceRange(min,max);
 
-        for (var vehicle: vehicles)
-        {
-            System.out.print(vehicle.displayVehicleInfo());
-            System.out.println("-".repeat(35));
-        }
+        displayVehicles(vehicles);
 
     }
 }
