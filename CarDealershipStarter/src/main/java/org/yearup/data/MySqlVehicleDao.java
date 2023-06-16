@@ -294,7 +294,7 @@ public class MySqlVehicleDao implements VehicleDao{
             preparedStatement.setBoolean(8, vehicle.isSold());
 
             int row = preparedStatement.executeUpdate();
-            vehicle = getVehicleByVin(vehicle.getVin());
+            createdVehicle = getVehicleByVin(vehicle.getVin());
 
             if(row != 0)
             {
@@ -307,7 +307,7 @@ public class MySqlVehicleDao implements VehicleDao{
             System.out.println(e);
         }
 
-        return vehicle;
+        return null;
     }
 
     @Override

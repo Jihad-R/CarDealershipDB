@@ -20,7 +20,56 @@ public class CarDealershipApplication
 
     public void run()
     {
-        
+        deleteVehicle();
+    }
+
+    private void deleteVehicle() {
+        System.out.print("Enter the vin: ");
+        String vin = scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+        vehicleDao.delete(vin);
+
+    }
+
+    private void createVehicle()
+    {
+        System.out.print("Enter the vin: ");
+        String vin = scanner.nextLine();
+
+        System.out.print("Enter the make: ");
+        String make = scanner.nextLine();
+
+        System.out.print("Enter the model: ");
+        String model = scanner.nextLine();
+
+        System.out.print("Enter the color: ");
+        String color = scanner.nextLine();
+
+        System.out.print("Enter the year: ");
+        int year = scanner.nextInt();
+
+        System.out.print("Enter the miles: ");
+        int miles = scanner.nextInt();
+
+        System.out.print("Enter the price: ");
+        BigDecimal price = scanner.nextBigDecimal();
+
+        Vehicle vehicleToInsert = new Vehicle(){{
+            setVin(vin);
+            setMake(make);
+            setModel(model);
+            setYear(year);
+            setMiles(miles);
+            setPrice(price);
+            setColor(color);
+            setSold(false);
+        }};
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        var vehicle = vehicleDao.create(vehicleToInsert);
+
+        System.out.println(vehicle.displayVehicleInfo());
     }
 
     private void displayVehicles(List<Vehicle> vehicles) {
