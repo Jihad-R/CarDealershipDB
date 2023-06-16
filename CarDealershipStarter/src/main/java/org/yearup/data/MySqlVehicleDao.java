@@ -19,6 +19,40 @@ public class MySqlVehicleDao implements VehicleDao{
     }
 
     @Override
+    public Vehicle getVehicleByVin(String vin) {
+
+        String sql = """
+                Select * from vehicles 
+                where vin = ?;
+                     """;
+        Vehicle vehicle = null;
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1,vin);
+            ResultSet rows = preparedStatement.executeQuery();
+
+            if (rows.next())
+            {
+                vehicle = createVehicleFromResultSet(rows);
+            }
+
+            return vehicle;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Vehicle> getByPriceRange(BigDecimal min, BigDecimal max) {
 
         String sql = """
@@ -233,6 +267,76 @@ public class MySqlVehicleDao implements VehicleDao{
         }
 
         return null;
+    }
+
+    @Override
+    public Vehicle create(Vehicle vehicle) {
+        String sql = """
+                     INSERT INTO vehicles 
+                     (vin, make, model, color, year, miles, price, sold)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+                     """;
+        Vehicle createdVehicle = null;
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1, vehicle.getVin());
+            preparedStatement.setString(2, vehicle.getMake());
+            preparedStatement.setString(3, vehicle.getModel());
+            preparedStatement.setString(4, vehicle.getColor());
+            preparedStatement.setInt(5, vehicle.getYear());
+            preparedStatement.setInt(6, vehicle.getMiles());
+            preparedStatement.setBigDecimal(7, vehicle.getPrice());
+            preparedStatement.setBoolean(8, vehicle.isSold());
+
+            int row = preparedStatement.executeUpdate();
+            vehicle = getVehicleByVin(vehicle.getVin());
+
+            if(row != 0)
+            {
+                System.out.printf("Added %d row(s)\n",row);
+            }
+        return createdVehicle;
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
+        return vehicle;
+    }
+
+    @Override
+    public void delete(String vin) {
+        String sql = """
+                     DELETE FROM vehicles 
+                     WHERE vin = ?;
+                     """;
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1, vin);
+
+            int row = preparedStatement.executeUpdate();
+
+            if(row>-1)
+            {
+                System.out.printf("Updated %d row(s)\n",row);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
     }
 
     private Vehicle createVehicleFromResultSet(ResultSet rows) throws SQLException {
