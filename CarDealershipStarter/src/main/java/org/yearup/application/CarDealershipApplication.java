@@ -19,6 +19,36 @@ public class CarDealershipApplication
     public void run()
     {
         displayVehiclesInPriceRange();
+        displayVehiclesByMakeModel();
+    }
+
+    private void displayVehiclesByMakeModel() {
+        System.out.print("Enter the make: ");
+        String make = scanner.nextLine();
+
+        System.out.print("Enter the model: ");
+        String model = scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+
+        System.out.println();
+        System.out.println("Results");
+        System.out.println("-".repeat(35));
+
+        var vehicles = vehicleDao.getByMakeModel(make,model);
+
+        for (var vehicle: vehicles)
+        {
+            System.out.println("Vin: "+vehicle.getVin());
+            System.out.println("Make (Model): "+vehicle.getMake()+" ("+vehicle.getModel()+")");
+            System.out.println("Color: "+vehicle.getColor());
+            System.out.println("Mileage: "+vehicle.getMiles());
+            System.out.println("In Stock: "+!(vehicle.isSold()));
+            System.out.println("Price: "+vehicle.getPrice());
+            System.out.println("-".repeat(35));
+        }
+
+
     }
 
     private void displayVehiclesInPriceRange()
@@ -28,6 +58,7 @@ public class CarDealershipApplication
 
         System.out.print("Enter the max price range: ");
         BigDecimal max = scanner.nextBigDecimal();
+        scanner.nextLine();
 
         VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
 

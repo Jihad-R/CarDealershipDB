@@ -11,6 +11,8 @@ import java.util.List;
 public class MySqlVehicleDao implements VehicleDao{
 
     private DataSource dataSource;
+    private List<Vehicle> vehicles = new ArrayList<>();
+
 
     public MySqlVehicleDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -18,8 +20,6 @@ public class MySqlVehicleDao implements VehicleDao{
 
     @Override
     public List<Vehicle> getByPriceRange(BigDecimal min, BigDecimal max) {
-
-        List<Vehicle> vehicles = new ArrayList<>();
 
         String sql = """
                 Select * from vehicles where price Between ? and ?;
@@ -38,26 +38,7 @@ public class MySqlVehicleDao implements VehicleDao{
 
             while (rows.next())
             {
-                String vin = rows.getString("vin"); // vim
-                String make = rows.getString("make"); // make
-                String model = rows.getString("model"); // model
-                String color = rows.getString("color"); // color
-                int year = rows.getInt("year");// year
-                int miles = rows.getInt("miles"); // miles
-                BigDecimal price = rows.getBigDecimal("price");// price
-                boolean isSold = rows.getBoolean("sold"); // sold
-
-                Vehicle vehicle = new Vehicle(){{
-                    setVin(vin);
-                    setMake(make);
-                    setModel(model);
-                    setColor(color);
-                    setYear(year);
-                    setMiles(miles);
-                    setPrice(price);
-                    setSold(isSold);
-                }};
-
+                Vehicle vehicle = createVehicleFromResultSet(rows);
                 vehicles.add(vehicle);
             }
 
@@ -76,6 +57,37 @@ public class MySqlVehicleDao implements VehicleDao{
 
     @Override
     public List<Vehicle> getByMakeModel(String make, String model) {
+
+        String sql = """
+                Select * from vehicles 
+                where make = ? and model = ?;
+                     """;
+
+        try
+                (
+                        Connection connection = dataSource.getConnection();
+                        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )
+        {
+
+            preparedStatement.setString(1,make);
+            preparedStatement.setString(2,model);
+            ResultSet rows = preparedStatement.executeQuery();
+
+            while (rows.next())
+            {
+                Vehicle vehicle = createVehicleFromResultSet(rows);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+
         return null;
     }
 
@@ -97,5 +109,28 @@ public class MySqlVehicleDao implements VehicleDao{
     @Override
     public List<Vehicle> getByType(String type) {
         return null;
+    }
+
+    private Vehicle createVehicleFromResultSet(ResultSet rows) throws SQLException {
+        String vin = rows.getString("vin");
+        String make = rows.getString("make");
+        String model = rows.getString("model");
+        String color = rows.getString("color");
+        int year = rows.getInt("year");
+        int miles = rows.getInt("miles");
+        BigDecimal price = rows.getBigDecimal("price");
+        boolean isSold = rows.getBoolean("sold");
+
+        Vehicle vehicle = new Vehicle();
+        vehicle.setVin(vin);
+        vehicle.setMake(make);
+        vehicle.setModel(model);
+        vehicle.setColor(color);
+        vehicle.setYear(year);
+        vehicle.setMiles(miles);
+        vehicle.setPrice(price);
+        vehicle.setSold(isSold);
+
+        return vehicle;
     }
 }
