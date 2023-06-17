@@ -8,6 +8,7 @@ import java.util.List;
 public interface VehicleDao {
 
     Vehicle getVehicleByVin(String vin);
+    Vehicle getVehicleByDealershipID(String i);
     List<Vehicle> getByPriceRange(BigDecimal min, BigDecimal max);
 
     List<Vehicle> getByMakeModel(String make,String model);

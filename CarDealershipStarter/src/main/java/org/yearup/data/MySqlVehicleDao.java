@@ -53,6 +53,12 @@ public class MySqlVehicleDao implements VehicleDao{
     }
 
     @Override
+    public Vehicle getVehicleByDealershipID(String vin) {
+
+        return null;
+    }
+
+    @Override
     public List<Vehicle> getByPriceRange(BigDecimal min, BigDecimal max) {
 
         String sql = """

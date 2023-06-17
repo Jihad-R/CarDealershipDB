@@ -1,7 +1,10 @@
 package org.yearup.application;
 
+import org.yearup.data.MySqlSalesContractDao;
 import org.yearup.data.MySqlVehicleDao;
+import org.yearup.data.SalesContractDao;
 import org.yearup.data.VehicleDao;
+import org.yearup.models.SalesContract;
 import org.yearup.models.Vehicle;
 
 import javax.sql.DataSource;
@@ -20,7 +23,60 @@ public class CarDealershipApplication
 
     public void run()
     {
-        deleteVehicle();
+        addSalesContract();
+    }
+
+    private void addSalesContract() {
+//
+//        private int salesId;
+//        private String vin;
+//        private String customerName;
+//        private String customerEmail;
+//        private BigDecimal salesPrice;
+//        private BigDecimal recordingFee;
+//        private BigDecimal processingFee;
+//        private BigDecimal salesTax;
+        BigDecimal processingfee_ = BigDecimal.valueOf(0);
+
+        System.out.println("Enter the vin: ");
+        String vin = scanner.nextLine();
+
+        System.out.println("Enter the name: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Enter the email: ");
+        String email = scanner.nextLine();
+
+        VehicleDao vehicleDao = new MySqlVehicleDao(dataSource);
+        Vehicle vehicle = vehicleDao.getVehicleByVin(vin);
+
+        if(vehicle != null) {
+            if(vehicle.getPrice().compareTo(BigDecimal.valueOf(10000)) < 0)
+            {
+                processingfee_ = BigDecimal.valueOf(295);
+            }
+            else processingfee_ = BigDecimal.valueOf(495);
+
+            BigDecimal finalProcessingfee_ = processingfee_;
+            BigDecimal salesTax = BigDecimal.valueOf(0.05).multiply(vehicle.getPrice());
+            SalesContract contract = new SalesContract() {{
+                setVin(vin);
+                setCustomerName(name);
+                setCustomerEmail(email);
+                setRecordingFee(getRecordingFee());
+                setProcessingFee(finalProcessingfee_);
+                setSalesTax(salesTax);
+                setSalesPrice(vehicle.getPrice());
+            }};
+
+            SalesContractDao salesContractDao = new MySqlSalesContractDao(dataSource);
+            SalesContract salesContract = salesContractDao.makePurchase(contract);
+            if(salesContract != null)
+            System.out.println(salesContract.displayInfo());
+        }
+        else{
+            System.out.println("Vehicle don't exist");
+        }
     }
 
     private void deleteVehicle() {

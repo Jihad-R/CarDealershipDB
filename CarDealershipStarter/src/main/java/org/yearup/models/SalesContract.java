@@ -60,7 +60,9 @@ public class SalesContract
 
     public void setSalesPrice(BigDecimal salesPrice)
     {
-        this.salesPrice = salesPrice;
+        this.salesPrice = salesPrice.add(getRecordingFee()).
+                            add(getProcessingFee()).add(getSalesTax());
+
     }
 
     public BigDecimal getRecordingFee()
@@ -70,7 +72,7 @@ public class SalesContract
 
     public void setRecordingFee(BigDecimal recordingFee)
     {
-        this.recordingFee = recordingFee;
+        this.recordingFee = BigDecimal.valueOf(100);
     }
 
     public BigDecimal getProcessingFee()
@@ -91,5 +93,20 @@ public class SalesContract
     public void setSalesTax(BigDecimal salesTax)
     {
         this.salesTax = salesTax;
+    }
+
+    public String displayInfo()
+    {
+        return String.format("Sale_id: %d\n" +
+                      "Vin: %s\n" +
+                       "Customer Name: %s\n" +
+                       "Customer Email: %s\n" +
+                       "Sales Price: %.2f\n" +
+                       "Recording Fee: %.2f\n" +
+                       "Processing Fee: %.2f\n" +
+                       "Sales Tax: %.2f",getSalesId(),getVin(),getCustomerName(),
+                                        getCustomerEmail(),getSalesPrice(),getRecordingFee(),
+                                        getProcessingFee(),getSalesTax());
+
     }
 }
