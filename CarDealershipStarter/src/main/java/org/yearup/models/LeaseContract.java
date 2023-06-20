@@ -103,4 +103,19 @@ public class LeaseContract
     {
         this.monthlyPayment = monthlyPayment;
     }
+    public String displayInfo()
+    {
+        return String.format("|%-3d|" +
+                        "%-20s|" +
+                        "%-50s|" +
+                        "%-50s|" +
+                        "%-10.2f|" +
+                        "%-10.2f|" +
+                        "%-10.2f|" +
+                        "%-10.2f|"+
+                        "%-10.2f|",getLeaseId(),getVin(),getCustomerName(),
+                getCustomerEmail(),getSalesPrice(),getEndingValue(),
+                getLeaseFee(),getSalesTax(),getMonthlyPayment());
+
+    }
 }

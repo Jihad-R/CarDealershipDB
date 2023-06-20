@@ -96,13 +96,13 @@ public class Vehicle
     public String displayVehicleInfo(){
 
         return String.format(
-                "Vin: %s\n" +
-                "Make (Model): %s (%s)\n" +
-                "Color: %s\n" +
-                "Mileage: %d\n" +
-                "In Stock: %b\n" +
-                "Year: %d\n"+
-                "Price[$]: %.2f\n",
+                "|%-20s" +
+                "|%-50s|%-50s|" +
+                "|%-20s" +
+                "|%-8d" +
+                "|%-5b" +
+                "|%-5d"+
+                "|%-8.2f|",
                 getVin(),
                 getMake(),
                 getModel(),

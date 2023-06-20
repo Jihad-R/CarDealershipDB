@@ -207,7 +207,7 @@ public class MySqlVehicleDao implements VehicleDao{
 
         String sql = """
                 Select * from vehicles 
-                where miles Between ? and ?;
+                where miles>= ? and miles>= ?;
                      """;
 
         try
