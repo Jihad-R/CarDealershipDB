@@ -195,7 +195,8 @@ public class CarDealershipApplication
         System.out.println("3) Display vehicles by year range");
         System.out.println("4) Display vehicles by color");
         System.out.println("5) Display vehicles by mileage range");
-        System.out.println("6) Display vehicles by type");
+        System.out.println("6) Add a vehicle");
+        System.out.println("7) Remove a vehicle");
         System.out.print("Enter a selection (1-6): ");
         String selection = scanner.nextLine();
 
@@ -232,7 +233,12 @@ public class CarDealershipApplication
             }
             case "6":
             {
-                System.out.println("Coming Soon");
+                createVehicle();
+                break;
+            }
+            case "7":
+            {
+                deleteVehicle();
                 break;
             }
             default:
